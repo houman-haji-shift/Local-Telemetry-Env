@@ -12,8 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 FROM golang:1.17
-COPY . /usr/src/client/
 WORKDIR /usr/src/client/
+COPY ./Makefile ./ 
+COPY ./go.mod ./
+COPY ./go.sum ./
+COPY ./main.go ./
 RUN go env -w GOPROXY=direct
 RUN go install ./main.go
 CMD ["/go/bin/main"]
