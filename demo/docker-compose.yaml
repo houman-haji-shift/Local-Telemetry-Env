@@ -1,8 +1,9 @@
-version: "2"
+version: "3"
 services:
 
   # Jaeger
   jaeger-all-in-one:
+    container_name: jaeger-all-in-one
     image: jaegertracing/all-in-one:latest
     ports:
       - "16686:16686"
@@ -11,12 +12,14 @@ services:
 
   # Zipkin
   zipkin-all-in-one:
+    container_name: zipkin-all-in-one
     image: openzipkin/zipkin:latest
     ports:
       - "9411:9411"
 
   # Collector
   otel-collector:
+    container_name: otel-collector
     image: ${OTELCOL_IMG}
     command: ["--config=/etc/otel-collector-config.yaml", "${OTELCOL_ARGS}"]
     volumes:
@@ -33,8 +36,8 @@ services:
       - zipkin-all-in-one
 
   demo-client:
+    container_name: demo-client
     build:
-      dockerfile: Dockerfile
       context: ./client
     environment:
       - OTEL_EXPORTER_OTLP_ENDPOINT=otel-collector:4317
@@ -43,8 +46,8 @@ services:
       - demo-server
 
   demo-server:
+    container_name: demo-server
     build:
-      dockerfile: Dockerfile
       context: ./server
     environment:
       - OTEL_EXPORTER_OTLP_ENDPOINT=otel-collector:4317
